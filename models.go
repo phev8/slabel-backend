@@ -29,6 +29,7 @@ type Label struct {
 type LabelTemplate struct {
 	gorm.Model
 	Description     string          `json:"description"`
+	LabelSetID      uint            `json:"labelset_id"`
 	LabelTemplateID uint            `json:"parent_id"`
 	Children        []LabelTemplate `json:"children"`
 }
@@ -38,4 +39,17 @@ type LabelSet struct {
 	gorm.Model
 	Name   string          `json:"name"`
 	Labels []LabelTemplate `json:"labels"`
+}
+
+// BeforeDelete for labelset is used to clean up LabelTemplates
+func (labelset *LabelSet) BeforeDelete(tx *gorm.DB) (err error) {
+	// Remove invoice notes:
+	var labelTemps []LabelTemplate
+
+	tx.Model(&labelset).Related(&labelTemps)
+
+	for _, item := range labelTemps {
+		tx.Delete(&item)
+	}
+	return
 }

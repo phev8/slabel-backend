@@ -27,7 +27,17 @@ func main() {
 	api1 := router.Group("/api/v1")
 	api1.Use(GetCorsSetting())
 	{
-		api1.GET("", nil)
+		authorized := api1.Group("/")
+		authorized.Use(KeyRequired())
+
+		authorized.GET("/test", TestAPI)
+		authorized.GET("/labelset", GetLabelSetsHandl)
+		authorized.POST("/labelset", CreateLabelSetHandl)
+		authorized.PUT("/labelset", UpdateLabelSetHandl)
+		authorized.DELETE("/labelset", DeleteLabelSetHandl)
+
+		authorized.GET("/labelset/labels", GetSingleLabelSetHandl)
+
 	}
 
 	defer DB.Close()

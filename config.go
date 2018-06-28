@@ -23,6 +23,19 @@ func OpenDB() {
 	}
 
 	log.Println("You connected to your database.")
+
+	if !DB.HasTable(&Session{}) {
+		DB.CreateTable(&Session{})
+	}
+	if !DB.HasTable(&LabelSet{}) {
+		DB.CreateTable(&LabelSet{})
+	}
+	if !DB.HasTable(&LabelTemplate{}) {
+		DB.CreateTable(&LabelTemplate{})
+	}
+	if !DB.HasTable(&Label{}) {
+		DB.CreateTable(&Label{})
+	}
 }
 
 // GetCorsSetting for setting api properties
