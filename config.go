@@ -42,7 +42,7 @@ func OpenDB() {
 func GetCorsSetting() gin.HandlerFunc {
 	return cors.Middleware(cors.Config{
 		Origins:         "*",
-		RequestHeaders:  "Authorization, Origin, Content-Type",
+		RequestHeaders:  "Api, Authorization, Origin, Content-Type",
 		Methods:         "GET, POST, PUT, DELETE",
 		Credentials:     true,
 		ValidateHeaders: false,

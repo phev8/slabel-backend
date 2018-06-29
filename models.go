@@ -34,7 +34,7 @@ type LabelTemplate struct {
 	Description     string          `json:"description"`
 	LabelSetID      uint            `json:"labelset_id"`
 	LabelTemplateID uint            `json:"parent_id"`
-	Children        []LabelTemplate `json:"children,omitempty"`
+	Children        []LabelTemplate `json:"children"`
 }
 
 // LabelSet is a collaction of hierarchical labels
