@@ -117,8 +117,57 @@ func DeleteLabelSetHandl(context *gin.Context) {
 }
 
 // Add new label template (to labelset and parent)
+func CreateLabelTemplateHandl(context *gin.Context) {
+	params := LabelTemplate{}
+
+	if err := context.BindJSON(&params); err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"msg": err.Error()})
+		return
+	}
+
+	labelTemplate, err := CreateNewLabelTemplate(params)
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"msg": err.Error()})
+		return
+	}
+
+	context.JSON(http.StatusOK, gin.H{"label_template": labelTemplate})
+}
+
+// UpdateLabelTemplateHandl for updating a label template
+func UpdateLabelTemplateHandl(context *gin.Context) {
+	params := LabelTemplate{}
+
+	if err := context.BindJSON(&params); err != nil {
+		//log.Println(err.(validator.ValidationErrors));
+		context.JSON(http.StatusBadRequest, gin.H{"msg": err.Error()})
+		return
+	}
+
+	label, err := UpdateLabelTemplate(params)
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"msg": err.Error()})
+		return
+	}
+
+	context.JSON(http.StatusOK, gin.H{"label_template": label})
+}
 
 // Remove label and its sublabels from labelset
+func DeleteLabelTemplateHandl(context *gin.Context) {
+	ltID, ok := context.GetQuery("id")
+	parsedLabelTemplateID, err := strconv.ParseUint(ltID, 10, 64)
+	if !ok || err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"msg": "You should provide a correct label set id."})
+		return
+	}
+
+	if err := DeleteLabelTemplate(uint(parsedLabelTemplateID)); err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"msg": err.Error()})
+		return
+	}
+	context.JSON(http.StatusOK, gin.H{"msg": "subtree deleted"})
+}
 
 // Get all labels of a labelset
 func GetSingleLabelSetHandl(context *gin.Context) {

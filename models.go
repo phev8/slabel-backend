@@ -27,11 +27,14 @@ type Label struct {
 
 // LabelTemplate is one node in the hierarchy
 type LabelTemplate struct {
-	gorm.Model
+	ID              uint            `gorm:"primary_key"`
+	CreatedAt       time.Time       `json:"created_at,omitempty"`
+	UpdatedAt       time.Time       `json:"updated_at,omitempty"`
+	DeletedAt       *time.Time      `json:"deleted_at,omitempty"`
 	Description     string          `json:"description"`
 	LabelSetID      uint            `json:"labelset_id"`
 	LabelTemplateID uint            `json:"parent_id"`
-	Children        []LabelTemplate `json:"children"`
+	Children        []LabelTemplate `json:"children,omitempty"`
 }
 
 // LabelSet is a collaction of hierarchical labels

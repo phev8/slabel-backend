@@ -37,6 +37,9 @@ func main() {
 		authorized.DELETE("/labelset", DeleteLabelSetHandl)
 
 		authorized.GET("/labelset/labels", GetSingleLabelSetHandl)
+		authorized.POST("/labelset/label", CreateLabelTemplateHandl)
+		authorized.PUT("/labelset/label", UpdateLabelTemplateHandl)
+		authorized.DELETE("/labelset/label", DeleteLabelTemplateHandl)
 
 	}
 
