@@ -14,6 +14,19 @@ type Session struct {
 	Labels    []Label   `json:"labels"`
 }
 
+// BeforeDelete for labelset is used to clean up LabelTemplates
+func (session *Session) BeforeDelete(tx *gorm.DB) (err error) {
+	// Remove invoice notes:
+	var labels []Label
+
+	tx.Model(&session).Related(&labels)
+
+	for _, item := range labels {
+		tx.Delete(&item)
+	}
+	return
+}
+
 // Label is an annotated event
 type Label struct {
 	gorm.Model

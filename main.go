@@ -41,6 +41,13 @@ func main() {
 		authorized.PUT("/labelset/label", UpdateLabelTemplateHandl)
 		authorized.DELETE("/labelset/label", DeleteLabelTemplateHandl)
 
+		authorized.GET("/session", GetSessionsHandl)
+		authorized.POST("/session", CreateSessionHandl)
+		authorized.PUT("/session", UpdateSessionHandl)
+		authorized.DELETE("/session", DeleteSessionHandl)
+
+		authorized.GET("/session/labels", GetSingleSessionHandl)
+
 	}
 
 	defer DB.Close()

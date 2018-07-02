@@ -89,7 +89,7 @@ func UpdateLabelSetHandl(context *gin.Context) {
 	context.JSON(http.StatusOK, gin.H{"labelset": labelset})
 }
 
-// Get Labelsets
+// GetLabelSetsHandl to retrieve all Labelsets
 func GetLabelSetsHandl(context *gin.Context) {
 	labelsets, err := GetLabelSets()
 	if err != nil {
@@ -100,7 +100,7 @@ func GetLabelSetsHandl(context *gin.Context) {
 	context.JSON(http.StatusOK, gin.H{"labelsets": labelsets})
 }
 
-// Delete Labelset and all of its labels
+// DeleteLabelSetHandl is used to Delete Labelset and all of its labels
 func DeleteLabelSetHandl(context *gin.Context) {
 	labelsetID, ok := context.GetQuery("id")
 	parsedLabelsetID, err := strconv.ParseUint(labelsetID, 10, 64)
@@ -116,7 +116,7 @@ func DeleteLabelSetHandl(context *gin.Context) {
 	context.JSON(http.StatusOK, gin.H{"msg": "label set deleted successfully"})
 }
 
-// Add new label template (to labelset and parent)
+// CreateLabelTemplateHandl for add new label template (to labelset and parent)
 func CreateLabelTemplateHandl(context *gin.Context) {
 	params := LabelTemplate{}
 
@@ -153,7 +153,7 @@ func UpdateLabelTemplateHandl(context *gin.Context) {
 	context.JSON(http.StatusOK, gin.H{"label_template": label})
 }
 
-// Remove label and its sublabels from labelset
+// DeleteLabelTemplateHandl to Remove label and its sublabels from labelset
 func DeleteLabelTemplateHandl(context *gin.Context) {
 	ltID, ok := context.GetQuery("id")
 	parsedLabelTemplateID, err := strconv.ParseUint(ltID, 10, 64)
@@ -169,7 +169,7 @@ func DeleteLabelTemplateHandl(context *gin.Context) {
 	context.JSON(http.StatusOK, gin.H{"msg": "subtree deleted"})
 }
 
-// Get all labels of a labelset
+// GetSingleLabelSetHandl to get a populated labelset
 func GetSingleLabelSetHandl(context *gin.Context) {
 	lsID, ok := context.GetQuery("id")
 	parsedLsID, err := strconv.ParseUint(lsID, 10, 64)
@@ -184,4 +184,86 @@ func GetSingleLabelSetHandl(context *gin.Context) {
 		return
 	}
 	context.JSON(http.StatusOK, gin.H{"labelset": ls})
+}
+
+// CreateSessionHandl for creating a new session
+func CreateSessionHandl(context *gin.Context) {
+	params := Session{}
+
+	if err := context.BindJSON(&params); err != nil {
+		//log.Println(err.(validator.ValidationErrors));
+		context.JSON(http.StatusBadRequest, gin.H{"msg": err.Error()})
+		return
+	}
+
+	session, err := CreateNewSession(params)
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"msg": err.Error()})
+		return
+	}
+
+	context.JSON(http.StatusOK, gin.H{"session": session})
+}
+
+// UpdateSessionHandl for updating a session
+func UpdateSessionHandl(context *gin.Context) {
+	params := Session{}
+
+	if err := context.BindJSON(&params); err != nil {
+		//log.Println(err.(validator.ValidationErrors));
+		context.JSON(http.StatusBadRequest, gin.H{"msg": err.Error()})
+		return
+	}
+
+	session, err := UpdateSession(params)
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"msg": err.Error()})
+		return
+	}
+
+	context.JSON(http.StatusOK, gin.H{"session": session})
+}
+
+// GetSessionsHandl to retrieve all Sessions
+func GetSessionsHandl(context *gin.Context) {
+	sessions, err := GetSessions()
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"msg": err.Error()})
+		return
+	}
+
+	context.JSON(http.StatusOK, gin.H{"sessions": sessions})
+}
+
+// DeleteSessionHandl to Delete session and all of its labels
+func DeleteSessionHandl(context *gin.Context) {
+	sID, ok := context.GetQuery("id")
+	parsedSID, err := strconv.ParseUint(sID, 10, 64)
+	if !ok || err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"msg": "You should provide a correct session id."})
+		return
+	}
+
+	if err := DeleteSession(uint(parsedSID)); err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"msg": err.Error()})
+		return
+	}
+	context.JSON(http.StatusOK, gin.H{"msg": "session deleted successfully"})
+}
+
+// GetSingleSessionHandl to get a populated session instance by id
+func GetSingleSessionHandl(context *gin.Context) {
+	sID, ok := context.GetQuery("id")
+	parsedSID, err := strconv.ParseUint(sID, 10, 64)
+	if !ok || err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"msg": "You should provide a correct session id."})
+		return
+	}
+
+	s, err := GetSingleSession(uint(parsedSID))
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"msg": err.Error()})
+		return
+	}
+	context.JSON(http.StatusOK, gin.H{"session": s})
 }

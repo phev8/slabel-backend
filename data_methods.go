@@ -93,3 +93,47 @@ func CreateNewLabelTemplate(lt LabelTemplate) (LabelTemplate, error) {
 	}
 	return lt, nil
 }
+
+func CreateNewSession(session Session) (Session, error) {
+	result := DB.Create(&session)
+
+	if result.Error != nil {
+		return session, errors.New("session couldn't be created")
+	}
+
+	return session, nil
+}
+
+func UpdateSession(session Session) (Session, error) {
+	result := DB.Model(&session).Updates(session)
+
+	if result.Error != nil {
+		return session, errors.New("session couldn't be updated")
+	}
+
+	DB.First(&session, session.ID)
+	return session, nil
+}
+
+func GetSessions() (sessions []Session, err error) {
+	DB.Find(&sessions)
+	return sessions, nil
+}
+
+func DeleteSession(id uint) error {
+	var ls Session
+	if DB.First(&ls, id).RecordNotFound() {
+		return errors.New("session doesn't exist")
+	}
+
+	DB.Delete(&ls)
+	return nil
+}
+
+func GetSingleSession(id uint) (Session, error) {
+	var session Session
+	if DB.Preload("Labels").First(&session, id).RecordNotFound() {
+		return session, errors.New("session doesn't exist")
+	}
+	return session, nil
+}
