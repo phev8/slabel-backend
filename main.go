@@ -47,6 +47,9 @@ func main() {
 		authorized.DELETE("/session", DeleteSessionHandl)
 
 		authorized.GET("/session/labels", GetSingleSessionHandl)
+		authorized.POST("/session/label", CreateLabelHandl)
+		authorized.PUT("/session/label", UpdateLabelHandl)
+		authorized.DELETE("/session/label", DeleteLabelHandl)
 
 	}
 

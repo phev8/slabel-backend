@@ -30,12 +30,12 @@ func (session *Session) BeforeDelete(tx *gorm.DB) (err error) {
 // Label is an annotated event
 type Label struct {
 	gorm.Model
-	SessionID   uint      `json:"session_id"`
-	Description string    `json:"description"`
-	Subject     string    `json:"subject"`
-	Start       time.Time `json:"start"`
-	End         time.Time `json:"end"`
-	CreatedBy   string    `json:"created_by"`
+	SessionID   uint    `json:"session_id"`
+	Description string  `json:"description"`
+	Subject     string  `json:"subject"`
+	Start       float32 `json:"start"`
+	End         float32 `json:"end"`
+	CreatedBy   string  `json:"created_by"`
 }
 
 // LabelTemplate is one node in the hierarchy

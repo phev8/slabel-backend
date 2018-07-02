@@ -267,3 +267,56 @@ func GetSingleSessionHandl(context *gin.Context) {
 	}
 	context.JSON(http.StatusOK, gin.H{"session": s})
 }
+
+// CreateLabel for add new label to a session
+func CreateLabelHandl(context *gin.Context) {
+	params := Label{}
+
+	if err := context.BindJSON(&params); err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"msg": err.Error()})
+		return
+	}
+
+	label, err := CreateNewLabel(params)
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"msg": err.Error()})
+		return
+	}
+
+	context.JSON(http.StatusOK, gin.H{"label": label})
+}
+
+// UpdateLabelHandl for updating a label
+func UpdateLabelHandl(context *gin.Context) {
+	params := Label{}
+
+	if err := context.BindJSON(&params); err != nil {
+		//log.Println(err.(validator.ValidationErrors));
+		context.JSON(http.StatusBadRequest, gin.H{"msg": err.Error()})
+		return
+	}
+
+	label, err := UpdateLabel(params)
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"msg": err.Error()})
+		return
+	}
+
+	context.JSON(http.StatusOK, gin.H{"label": label})
+}
+
+// DeleteLabelHandl to Remove label from a session
+func DeleteLabelHandl(context *gin.Context) {
+	ltID, ok := context.GetQuery("id")
+	parsedLabelID, err := strconv.ParseUint(ltID, 10, 64)
+	if !ok || err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"msg": "You should provide a correct label id."})
+		return
+	}
+
+	if err := DeleteLabel(uint(parsedLabelID)); err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"msg": err.Error()})
+		return
+	}
+	context.JSON(http.StatusOK, gin.H{"msg": "deleted"})
+}

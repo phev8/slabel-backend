@@ -137,3 +137,35 @@ func GetSingleSession(id uint) (Session, error) {
 	}
 	return session, nil
 }
+
+func UpdateLabel(label Label) (Label, error) {
+	result := DB.Model(&label).Updates(label)
+
+	if result.Error != nil {
+		return label, errors.New("label couldn't be updated")
+	}
+
+	DB.First(&label, label.ID)
+	return label, nil
+}
+
+func DeleteLabel(id uint) error {
+	var lt Label
+	if DB.First(&lt, id).RecordNotFound() {
+		return errors.New("label doesn't exist")
+	}
+	DB.Delete(&lt)
+	return nil
+}
+
+func CreateNewLabel(lt Label) (Label, error) {
+	if lt.SessionID <= 0 {
+		return lt, errors.New("session not defined")
+	}
+	result := DB.Create(&lt)
+
+	if result.Error != nil {
+		return lt, errors.New("label couldn't be created")
+	}
+	return lt, nil
+}
