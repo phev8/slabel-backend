@@ -33,8 +33,8 @@ type Label struct {
 	SessionID   uint    `json:"session_id"`
 	Description string  `json:"description"`
 	Subject     string  `json:"subject"`
-	Start       float32 `json:"start"`
-	End         float32 `json:"end"`
+	Start       float64 `json:"start"`
+	End         float64 `json:"end"`
 	CreatedBy   string  `json:"created_by"`
 }
 
