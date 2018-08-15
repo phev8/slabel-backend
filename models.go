@@ -44,10 +44,10 @@ type LabelTemplate struct {
 	CreatedAt       time.Time       `json:"created_at,omitempty"`
 	UpdatedAt       time.Time       `json:"updated_at,omitempty"`
 	DeletedAt       *time.Time      `json:"deleted_at,omitempty"`
-	Description     string          `json:"description"`
-	LabelSetID      uint            `json:"labelset_id"`
-	LabelTemplateID uint            `json:"parent_id"`
-	Children        []LabelTemplate `json:"children"`
+	Description     string          `json:"description,omitempty"`
+	LabelSetID      uint            `json:"labelset_id,omitempty"`
+	LabelTemplateID uint            `json:"parent_id,omitempty"`
+	Children        []LabelTemplate `json:"children,omitempty"`
 }
 
 // LabelSet is a collaction of hierarchical labels

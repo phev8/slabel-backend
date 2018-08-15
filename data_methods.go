@@ -48,7 +48,7 @@ func DeleteLabelSet(id uint) error {
 func GetSingleLabelSet(id uint) (LabelSet, error) {
 	var labelset LabelSet
 	if DB.Preload("Labels.Children", func(db *gorm.DB) *gorm.DB {
-		return DB.Select("*")
+		return DB.Select("id, label_template_id") // ("*")
 	}).First(&labelset, id).RecordNotFound() {
 		return labelset, errors.New("label set doesn't exist")
 	}
